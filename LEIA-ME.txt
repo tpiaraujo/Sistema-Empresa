@@ -1,0 +1,27 @@
+FORNO - Demonstração de sistema para pizzarias
+
+COMO ABRIR
+Dê dois cliques em index.html. Abre no navegador, sem instalar nada.
+(Precisa de internet só para carregar as fontes; sem elas usa fontes do sistema.)
+
+O QUE TEM
+- index.html: a demonstração inteira em um arquivo só (cozinha, novo pedido, entregas, estoque, equipe, financeiro e painel).
+  O logo e o fundo já estão embutidos dentro dele.
+- assets/: as imagens originais, para você guardar ou editar.
+
+COMO TROCAR TEXTOS
+Abra o index.html no Bloco de Notas e procure por:
+- "Pizzaria Bella Massa"  -> nome da pizzaria na demo e na comanda
+- "Forno"                 -> nome do sistema, ao lado do logo
+- MENU                    -> sabores e preços (lista no começo do script)
+
+COMO TROCAR O LOGO OU O FUNDO
+As imagens estão embutidas como texto longo (data:image/jpeg;base64,...).
+O jeito mais simples é pedir a troca ao Claude enviando as imagens novas.
+
+COMO COLOCAR NO AR (GRÁTIS)
+Arraste a pasta para netlify.com/drop ou use o GitHub Pages / Vercel.
+Os limites dos planos gratuitos mudam; confira antes.
+
+OBSERVAÇÃO
+Os dados são de exemplo e não ficam salvos: ao recarregar, volta ao início.

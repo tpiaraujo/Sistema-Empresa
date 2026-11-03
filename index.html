@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gestão para pizzarias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+ <div class="bar"><div class="logo"><img class="mark" src="assets/logo.jpg" alt="Logo da pizzaria" width="44" height="44"><span id="brand"></span></div>
+ <div class="store"><b id="store-name"></b><small id="clock"></small><small id="contact"></small></div></div>
+ <nav id="nav" role="tablist"></nav>
+</header>
+<main id="view"></main>
+<div class="modal" id="tk"><div><div class="paper" id="paper"></div><div class="mbtn"><button class="btn" data-a="print">Imprimir</button><button class="btn ghost" style="background:var(--surface)" data-a="close">Fechar</button></div></div></div>
+<div id="toast" role="status"></div>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
