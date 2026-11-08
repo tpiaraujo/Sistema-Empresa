@@ -1035,3 +1035,84 @@ details p {
     color: var(--accent);
     margin: 0
 }
+
+@media (max-width:600px) {
+    .bar {
+        padding: 8px 14px
+    }
+
+    .logo {
+        font-size: 19px
+    }
+
+    .mark {
+        width: 38px;
+        height: 38px
+    }
+
+    nav {
+        gap: 2px;
+        padding: 0 10px 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none
+    }
+
+    nav::-webkit-scrollbar {
+        display: none
+    }
+
+    nav button {
+        min-height: 44px;
+        padding: 8px 12px
+    }
+
+    main {
+        padding: 16px 14px calc(88px + env(safe-area-inset-bottom, 0px))
+    }
+
+    h1 {
+        font-size: 24px
+    }
+
+    .top {
+        align-items: flex-start
+    }
+
+    .top > .btn {
+        width: 100%;
+        min-height: 44px
+    }
+
+    .board {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        overflow: visible
+    }
+
+    .col {
+        min-width: 0
+    }
+
+    .card {
+        padding: 12px
+    }
+
+    .r1 {
+        flex-wrap: wrap
+    }
+
+    .card .btn {
+        min-height: 44px;
+        white-space: normal
+    }
+
+    .card .lnk {
+        min-height: 44px;
+        padding: 10px 0
+    }
+
+    #help-btn {
+        right: 14px;
+        bottom: calc(14px + env(safe-area-inset-bottom, 0px))
+    }
+}
