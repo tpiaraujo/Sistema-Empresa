@@ -830,3 +830,208 @@ header {
         order: 3
     }
 }
+
+/* ---------- Ajuda / Manual ---------- */
+#help-btn {
+    position: fixed;
+    right: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 99px;
+    padding: 11px 18px 11px 12px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .45)
+}
+
+#help-btn i {
+    font-style: normal;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .2)
+}
+
+#help {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(430px, 100%);
+    z-index: 25;
+    background: #181210;
+    border-left: 1px solid var(--line);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, .5);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform .22s, visibility 0s .22s
+}
+
+#help.open {
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s
+}
+
+.hh {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 18px;
+    padding-top: calc(16px + env(safe-area-inset-top, 0px));
+    border-bottom: 1px solid var(--line);
+    font: 800 18px var(--fd)
+}
+
+.hx {
+    border: 0;
+    background: none;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--muted)
+}
+
+.htabs {
+    display: flex;
+    gap: 4px;
+    padding: 10px 14px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--line)
+}
+
+.htabs button {
+    border: 0;
+    background: none;
+    padding: 7px 12px;
+    border-radius: 8px;
+    color: var(--muted);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap
+}
+
+.htabs button[aria-selected="true"] {
+    background: var(--accent-soft);
+    color: var(--accent)
+}
+
+.hb {
+    padding: 16px 18px 40px;
+    overflow-y: auto;
+    flex: 1
+}
+
+.hb h3 {
+    font-size: 20px;
+    margin-bottom: 8px
+}
+
+.hb h4 {
+    margin: 18px 0 6px;
+    font: 700 15px var(--fd)
+}
+
+.hb ol,
+.hb ul {
+    padding-left: 20px;
+    margin: 6px 0
+}
+
+.hb li {
+    margin-bottom: 6px
+}
+
+.hq {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px
+}
+
+details {
+    border-bottom: 1px solid var(--line);
+    padding: 10px 0
+}
+
+summary {
+    cursor: pointer;
+    font-weight: 600
+}
+
+details p {
+    margin: 8px 0 0;
+    color: var(--muted)
+}
+
+.vid {
+    display: block;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600
+}
+
+.vid.off {
+    color: var(--muted);
+    font-weight: 500
+}
+
+@media print {
+
+    #help,
+    #help-btn {
+        display: none !important
+    }
+}
+
+/* ---------- Cancelar pedido ---------- */
+.lnk {
+    border: 0;
+    background: none;
+    color: var(--muted);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 8px 0 0
+}
+
+.lnk:hover {
+    color: var(--accent)
+}
+
+/* ---------- Login / criação da loja ---------- */
+.gate {
+    max-width: 380px;
+    margin: 8vh auto;
+    display: grid;
+    gap: 12px
+}
+
+.gate input {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 11px 12px
+}
+
+.err {
+    color: var(--accent);
+    margin: 0
+}

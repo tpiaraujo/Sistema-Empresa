@@ -1,13 +1,21 @@
 const CONFIG = {
 
   // Nome do sistema (ao lado do logo e na aba do navegador)
-  sistema: "Forno",
+  sistema: "Sistema-Restaurante",
 
   // Nome da pizzaria da demonstração (topo e comanda impressa)
-  pizzaria: "Pizzaria Bella Massa",
+  pizzaria: "Sistema-Restaurante Demo",
 
   // Seu contato, exibido no topo. "" = não aparece.
   contato: "",
+
+  // Banco de dados (Supabase). Deixe "" para rodar em MODO DEMONSTRAÇÃO (nada é salvo).
+  // Preenchendo os dois campos, o sistema passa a exigir login e a salvar tudo.
+  // Use a chave "anon"/"publishable". NUNCA use a chave "service_role" ou "secret".
+  supabase: {
+    url: "https://cvnqsgdfysobnpiympjh.supabase.co",
+    anonKey: "sb_publishable__95K4GO5ZPHJt_sEWV_eeA_XXTkbljT",   // Ex.: "eyJhbGciOi..." ou "sb_publishable_..."
+  },
 
   // Tamanhos (a ordem precisa bater com a ordem dos preços do cardápio)
   tamanhos: ["Broto", "Média", "Grande"],
