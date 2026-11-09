@@ -117,6 +117,7 @@ const MANUAL = {
 
   // Aba "Dúvidas": [ "Pergunta", "Resposta" ]
   faq: [
+    ["Como crio uma conta?", "Na tela Entrar, clique em Criar conta e informe seu e-mail, senha, nome da pizzaria e código de convite. Se for necessário confirmar o e-mail, entre depois para concluir a criação da pizzaria."],
     ["Como cancelo ou corrijo um pedido?", "Na Cozinha, clique em Cancelar pedido, no cartão, e confirme. Para corrigir, cancele e registre o pedido certo em Novo pedido. O cancelamento fica disponível até o pedido ficar Pronto."],
     ["O que significa o tempo em vermelho?", "Que o pedido está há mais de 20 minutos na loja e precisa de atenção."],
     ["Como imprimo a comanda?", "Em Novo pedido, clique em Enviar e ver comanda e depois em Imprimir. Escolha a impressora na janela do navegador."],

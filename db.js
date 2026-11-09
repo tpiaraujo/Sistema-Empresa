@@ -34,10 +34,29 @@ DB.boot=async()=>{
 };
 DB.entrar=async()=>{
  const m=await q(DB.client().from("membros").select("*").eq("user_id",DB.user.id));
- if(!m.length){DB.gate="loja";DB.msg="";return render();}
+ if(!m.length){
+  const meta=DB.user.user_metadata||{};
+  DB.nome=DB.nome||meta.nome_pizzaria||"";
+  DB.codigo=DB.codigo||meta.codigo_convite||"";
+  if(DB.nome&&DB.codigo){
+   try{await DB.criarLoja(DB.nome,DB.codigo);}catch(e){DB.gate="loja";DB.msg=DB.pt(e.message);render();}
+   return;
+  }
+  DB.gate="loja";DB.msg="";return render();
+ }
  const l=await q(DB.client().from("lojas").select("*").eq("id",m[0].loja_id));
  DB.loja={id:m[0].loja_id,nome:l[0]?l[0].nome:"",papel:m[0].papel};
  el("store-name").textContent=DB.loja.nome;
+ await DB.load();DB.gate="";DB.msg="";render();DB.poll();
+};
+DB.criarLoja=async(nome,codigo)=>{
+ const id=await q(DB.client().rpc("criar_loja",{p_nome:nome,p_codigo:codigo}));
+ DB.loja={id,nome,papel:"dono"};await DB.seed();
+ try{
+  const limpeza=await DB.client().auth.updateUser({data:{nome_pizzaria:null,codigo_convite:null}});
+  if(limpeza.error)throw limpeza.error;
+ }catch(e){toast("Pizzaria criada, mas não foi possível limpar os dados temporários do convite.");}
+ el("store-name").textContent=nome;DB.nome="";DB.codigo="";
  await DB.load();DB.gate="";DB.msg="";render();DB.poll();
 };
 DB.seed=async()=>{const L=DB.loja.id,s=DB.client();
@@ -83,7 +102,8 @@ DB.renderGate=()=>{
  const mail=`<input id="lemail" type="email" placeholder="E-mail" value="${esc(DB.email||"")}" aria-label="E-mail">`;
  const g=DB.gate;
  $("#view").innerHTML=
-  g==="login"?box(`<h1>Entrar</h1><p class="muted">Acesse o sistema da sua pizzaria.</p>${mail}<input id="lsenha" type="password" placeholder="Senha (mínimo 6 caracteres)" aria-label="Senha">${m}<button class="btn" data-a="dblogin">Entrar</button><button class="btn ghost" data-a="dbsignup">Criar conta</button><button class="lnk" data-a="dbesqueci">Esqueci minha senha</button>`)
+  g==="login"?box(`<h1>Entrar</h1><p class="muted">Acesse o sistema da sua pizzaria.</p>${mail}<input id="lsenha" type="password" placeholder="Senha (mínimo 6 caracteres)" aria-label="Senha">${m}<button class="btn" data-a="dblogin">Entrar</button><button class="btn ghost" data-a="dbcadastro">Criar conta</button><button class="lnk" data-a="dbesqueci">Esqueci minha senha</button>`)
+  :g==="cadastro"?box(`<h1>Criar conta</h1><p class="muted">Informe seus dados e o convite para criar sua pizzaria.</p>${mail}<input id="lsenha" type="password" placeholder="Senha (mínimo 6 caracteres)" aria-label="Senha"><input id="lnome" placeholder="Nome da pizzaria" value="${esc(DB.nome)}" aria-label="Nome da pizzaria"><input id="lcodigo" placeholder="Código de convite" value="${esc(DB.codigo)}" autocapitalize="characters" aria-label="Código de convite">${m}<button class="btn" data-a="dbsignup">Criar conta e acessar</button><button class="lnk" data-a="dbvoltar">Já tenho uma conta</button>`)
   :g==="esqueci"?box(`<h1>Recuperar senha</h1><p class="muted">Digite o e-mail da conta. Enviaremos um link para criar uma nova senha.</p>${mail}${m}<button class="btn" data-a="dbenviar">Enviar link</button><button class="lnk" data-a="dbvoltar">Voltar</button>`)
   :g==="nova"?box(`<h1>Nova senha</h1><p class="muted">Escolha uma nova senha para entrar.</p><input id="lsenha" type="password" placeholder="Nova senha (mínimo 6 caracteres)" aria-label="Nova senha"><input id="lsenha2" type="password" placeholder="Repita a nova senha" aria-label="Repita a nova senha">${m}<button class="btn" data-a="dbnova">Salvar senha</button>`)
   :g==="loja"?box(`<h1>Criar sua pizzaria</h1><p class="muted">Informe o nome da loja e o código de convite que você recebeu.</p><input id="lnome" placeholder="Nome da pizzaria" value="${esc(DB.nome)}" aria-label="Nome da pizzaria"><input id="lcodigo" placeholder="Código de convite" value="${esc(DB.codigo)}" autocapitalize="characters" aria-label="Código de convite">${m}<button class="btn" data-a="dbcriar">Criar</button><button class="lnk" data-a="dbsair">Sair</button>`)
@@ -101,22 +121,24 @@ DB.override=M=>{
  const run=async fn=>{try{await fn();await DB.load();render();}catch(e){DB.err(e);}};
  const cred=()=>{const c={email:el("lemail").value.trim(),password:el("lsenha").value};DB.email=c.email;return c;};
  const vazio=c=>{if(!c.email||!c.password){DB.msg="Digite o e-mail e a senha.";render();return true;}return false;};
- M.dblogin=async()=>{DB.msg="";const c=cred();if(vazio(c))return;let r;
+ M.dblogin=async()=>{DB.msg="";DB.ok=false;const c=cred();if(vazio(c))return;let r;
   try{r=await DB.client().auth.signInWithPassword(c);}catch(e){DB.msg=DB.pt(e.message);return render();}
   if(r.error){DB.msg=DB.pt(r.error.message);return render();}
   DB.user=r.data.user;try{await DB.entrar();}catch(e){DB.gate="erro";DB.msg=DB.pt(e.message);render();}};
- M.dbsignup=async()=>{DB.msg="";const c=cred();if(vazio(c))return;let r;
-  try{r=await DB.client().auth.signUp(c);}catch(e){DB.msg=DB.pt(e.message);return render();}
+ M.dbcadastro=()=>{DB.gate="cadastro";DB.msg="";DB.ok=false;render();};
+ M.dbsignup=async()=>{DB.msg="";const c=cred(),nome=el("lnome").value.trim(),codigo=el("lcodigo").value.trim();DB.nome=nome;DB.codigo=codigo;
+  if(vazio(c))return;
+  if(!nome){DB.msg="Informe o nome da pizzaria.";return render();}
+  if(!codigo){DB.msg="Informe o código de convite.";return render();}
+  let r;
+  try{r=await DB.client().auth.signUp({...c,options:{data:{nome_pizzaria:nome,codigo_convite:codigo}}});}catch(e){DB.msg=DB.pt(e.message);return render();}
   if(r.error){DB.msg=DB.pt(r.error.message);return render();}
-  if(!r.data.session){DB.msg="Conta criada. Confirme o e-mail que enviamos e depois entre.";return render();}
+  if(!r.data.session){DB.gate="login";DB.ok=true;DB.msg="Conta criada. Confirme o e-mail e depois entre; usaremos o convite informado para criar sua pizzaria.";return render();}
   DB.user=r.data.session.user;try{await DB.entrar();}catch(e){DB.gate="erro";DB.msg=DB.pt(e.message);render();}};
  M.dbcriar=async()=>{const nome=el("lnome").value.trim(),codigo=el("lcodigo").value.trim();DB.nome=nome;DB.codigo=codigo;DB.ok=false;
   if(!nome){DB.msg="Informe o nome da pizzaria.";return render();}
   if(!codigo){DB.msg="Informe o código de convite.";return render();}
-  try{const id=await q(DB.client().rpc("criar_loja",{p_nome:nome,p_codigo:codigo}));
-   DB.loja={id,nome,papel:"dono"};await DB.seed();el("store-name").textContent=nome;
-   DB.nome="";DB.codigo="";await DB.load();DB.gate="";DB.msg="";render();DB.poll();
-  }catch(e){DB.msg=DB.pt(e.message);render();}};
+  try{await DB.criarLoja(nome,codigo);}catch(e){DB.msg=DB.pt(e.message);render();}};
  M.dbesqueci=()=>{DB.gate="esqueci";DB.msg="";DB.ok=false;render();};
  M.dbvoltar=()=>{DB.gate="login";DB.msg="";DB.ok=false;render();};
  M.dbenviar=async()=>{const email=el("lemail").value.trim();DB.email=email;DB.ok=false;
